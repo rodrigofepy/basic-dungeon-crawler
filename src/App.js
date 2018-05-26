@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import Player from './features/player/container'
+import World from './features/world'
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Player />
+        <World />
       </div>
     )
   }

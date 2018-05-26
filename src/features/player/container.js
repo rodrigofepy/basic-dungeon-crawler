@@ -3,10 +3,15 @@ import { createStructuredSelector } from 'reselect'
 
 import Player from './index'
 
+import { movePlayer } from './actions'
 import makeSelectPlayer from './selector'
 
 const mapStateToProps = createStructuredSelector({
   position: makeSelectPlayer('position')
 })
 
-export default connect(mapStateToProps)(Player)
+const mapDispatchToProps = {
+  movePlayer
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Player)

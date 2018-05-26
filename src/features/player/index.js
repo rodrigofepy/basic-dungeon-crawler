@@ -1,12 +1,13 @@
 import React from 'react'
 import { array } from 'prop-types'
 
+import handleMovement from './movement'
 import walkSprite from './player_walk.png'
 
 const Player = ({ position: [left, top] }) => (
   <div
     style={{
-      position: 'relative',
+      position: 'absolute',
       top,
       left,
       backgroundImage: `url('${walkSprite}')`,
@@ -21,4 +22,4 @@ Player.propTypes = {
   position: array.isRequired
 }
 
-export default Player
+export default handleMovement(Player)
