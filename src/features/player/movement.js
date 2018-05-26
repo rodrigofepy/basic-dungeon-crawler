@@ -1,56 +1,62 @@
+import React, { Component } from 'react'
+
 import { SPRITE_SIZE } from '../../config/constants'
 import { switchcaseF } from '../../utils/switchcase'
 
-const handleMovement = player => (props, ...rest) => {
-  console.log('created')
+function handleMovement(PlayerComponent) {
+  return class extends Component {
+    componentDidMount() {
+      window.addEventListener('keydown', this.eventListener)
+    }
 
-  const {
-    position: [left, top],
-    movePlayer
-  } = props
+    componentWillUnmount() {
+      window.removeEventListener('keydown', this.eventListener)
+    }
 
-  const getNewPosition = switchcaseF({
-    WEST: () => [left - SPRITE_SIZE, top],
-    EAST: () => [left + SPRITE_SIZE, top],
-    NORTH: () => [left, top - SPRITE_SIZE],
-    SOUTH: () => [left, top + SPRITE_SIZE]
-  })([left, top])
+    eventListener = e => {
+      this.handleKeyDown(e)
+    }
 
-  window.addEventListener('keydown', e => {
-    handleKeyDown(e)
-  })
+    dispatchMove(direction) {
+      const {
+        position: [left, top],
+        movePlayer
+      } = this.props
 
-  return null
+      const getNewPosition = switchcaseF({
+        WEST: () => [left - SPRITE_SIZE, top],
+        EAST: () => [left + SPRITE_SIZE, top],
+        NORTH: () => [left, top - SPRITE_SIZE],
+        SOUTH: () => [left, top + SPRITE_SIZE]
+      })([left, top])
 
-  // Return player component and pass down the props
-  // return player(props, ...rest)
+      movePlayer(getNewPosition(direction))
+    }
 
-  // ###################### Methods ##############################3
+    handleKeyDown(e) {
+      switch (e.keyCode) {
+        case 37:
+          this.dispatchMove('WEST')
+          break
 
-  function dispatchMove(direction) {
-    console.log('dispatching movement')
-    movePlayer(getNewPosition(direction))
-  }
+        case 38:
+          e.preventDefault()
+          this.dispatchMove('NORTH')
+          break
 
-  function handleKeyDown(e) {
-    switch (e.keyCode) {
-      case 37:
-        dispatchMove('WEST')
-        break
+        case 39:
+          this.dispatchMove('EAST')
+          break
 
-      case 38:
-        e.preventDefault()
-        dispatchMove('NORTH')
-        break
+        case 40:
+          e.preventDefault()
+          this.dispatchMove('SOUTH')
+          break
+      }
+    }
 
-      case 39:
-        dispatchMove('EAST')
-        break
-
-      case 40:
-        e.preventDefault()
-        dispatchMove('SOUTH')
-        break
+    render() {
+      return <PlayerComponent {...this.props} />
     }
   }
 }
