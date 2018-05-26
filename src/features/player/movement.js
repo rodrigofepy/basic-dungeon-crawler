@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { SPRITE_SIZE } from '../../config/constants'
+import { MAP_HEIGHT, MAP_WIDTH, SPRITE_SIZE } from '../../config/constants'
 import { switchcaseF } from '../../utils/switchcase'
 
 function handleMovement(PlayerComponent) {
@@ -30,7 +30,9 @@ function handleMovement(PlayerComponent) {
         SOUTH: () => [left, top + SPRITE_SIZE]
       })([left, top])
 
-      movePlayer(getNewPosition(direction))
+      movePlayer(
+        this.observeBoundaries(this.props.position, getNewPosition(direction))
+      )
     }
 
     handleKeyDown(e) {
@@ -53,6 +55,14 @@ function handleMovement(PlayerComponent) {
           this.dispatchMove('SOUTH')
           break
       }
+    }
+
+    observeBoundaries(oldPos, newPos) {
+      return newPos[0] >= 0 &&
+        newPos[0] <= MAP_WIDTH &&
+        (newPos[1] >= 0 && newPos[1] <= MAP_HEIGHT)
+        ? newPos
+        : oldPos
     }
 
     render() {
